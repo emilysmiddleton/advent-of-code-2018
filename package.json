@@ -1,0 +1,26 @@
+{
+  "name": "advent-of-code-2018",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "./node_modules/.bin/tsc -p .",
+    "test": "ava --verbose test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emilysmiddleton/advent-of-code-2018.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/emilysmiddleton/advent-of-code-2018/issues"
+  },
+  "homepage": "https://github.com/emilysmiddleton/advent-of-code-2018#readme",
+  "dependencies": {
+    "@types/node": "^10.12.10",
+    "ava": "^0.25.0",
+    "typescript": "^3.1.6"
+  }
+}
