@@ -5,7 +5,7 @@ type Expectation = {
 
 type PartTest = {
     part: number,
-    method: (string) => any,
+    method: (lines: string[]) => any,
     fixtures: Expectation[]
 }
 

@@ -8,14 +8,14 @@ export const day22: DayTest = {
             part: 1,
             method: part1,
             fixtures: [
-                { input: 'todo', expected: 0 }
+
             ]
         },
         {
             part: 2,
             method: part2,
             fixtures: [
-                { input: 'todo', expected: 0 }
+
             ]
         }
     ]

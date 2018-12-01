@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "./node_modules/.bin/tsc -p .",
-    "test": "ava --verbose test"
+    "test": "ava --verbose test",
+    "runner": "npm run build && node src/runner.js"
   },
   "repository": {
     "type": "git",
