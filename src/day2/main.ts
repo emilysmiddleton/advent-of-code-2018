@@ -28,6 +28,21 @@ export function part1(lines: string[]): any {
     return twos * threes;
 }
 
-export function part2(_input: string[]): any {
-    return 0;
+export function part2(lines: string[]): any {
+    for (let i = 0; i < lines[0].length; i++) {
+        for (const lineA of lines) {
+            const maskedA: string = mask(lineA, i);
+            for (const lineB of lines) {
+                const maskedB: string = mask(lineB, i);
+                if (lineA !== lineB && maskedA === maskedB) {
+                    return maskedA;
+                }
+            }
+        }
+    }
+    return '';
+}
+
+function mask(line: string, i: number) {
+    return line.substring(0, i) + line.substring(i + 1, line.length);
 }

@@ -25,7 +25,17 @@ export const day2: DayTest = {
             part: 2,
             method: part2,
             fixtures: [
-
+                {
+                    input:
+                    'abcde, ' +
+                    'fghij, ' +
+                    'klmno, ' +
+                    'pqrst, ' +
+                    'fguij, ' +
+                    'axcye, ' +
+                    'wvxyz',
+                    expected: 'fgij'
+                }
             ]
         }
     ]
