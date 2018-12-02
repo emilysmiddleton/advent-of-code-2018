@@ -10,14 +10,14 @@ export const day2: DayTest = {
             fixtures: [
                 {
                     input:
-                    'abcdef\n' +
-                    'bababc\n' +
-                    'abbcde\n' +
-                    'abcccd\n' +
-                    'aabcdd\n' +
-                    'abcdee\n' +
+                    'abcdef, ' +
+                    'bababc, ' +
+                    'abbcde, ' +
+                    'abcccd, ' +
+                    'aabcdd, ' +
+                    'abcdee, ' +
                     'ababab',
-                    expected: '12'
+                    expected: 12
                 }
             ]
         },

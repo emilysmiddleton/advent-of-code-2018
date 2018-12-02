@@ -1,9 +1,9 @@
-import {part1, part2} from './day1/main'
+import {part1, part2} from './day2/main'
 
 run();
 
 async function run() {
-    const readStream: ReadableStream = require('fs').createReadStream('/Users/middletone/checkouts/advent-of-code-2018/src/day1/input.txt');
+    const readStream: ReadableStream = require('fs').createReadStream('/Users/middletone/checkouts/advent-of-code-2018/src/day2/input.txt');
     const lines: string[] = await parseLines(readStream);
     console.log("Part 1");
     console.log(part1(lines));
@@ -14,7 +14,7 @@ async function run() {
 async function parseLines(input: ReadableStream): Promise<string[]> {
     return new Promise<string[]>((resolve, _reject) => {
         const lines: string[] = [];
-        var lineReader = require('readline').createInterface({
+        const lineReader = require('readline').createInterface({
             input: input
         });
         lineReader.on('line', function (line) {
