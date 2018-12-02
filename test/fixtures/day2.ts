@@ -8,7 +8,17 @@ export const day2: DayTest = {
             part: 1,
             method: part1,
             fixtures: [
-
+                {
+                    input:
+                    'abcdef\n' +
+                    'bababc\n' +
+                    'abbcde\n' +
+                    'abcccd\n' +
+                    'aabcdd\n' +
+                    'abcdee\n' +
+                    'ababab',
+                    expected: '12'
+                }
             ]
         },
         {
