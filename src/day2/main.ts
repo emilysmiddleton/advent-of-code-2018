@@ -8,17 +8,13 @@ function parseLine(line: string): Map<string, number> {
     return map;
 }
 
-function getFrequencies(map: Map<string, number>) : Set<number> {
-    const set = new Set<number>();
-    for (const frequency of map.values()) {
-        set.add(frequency);
-    }
-    return set;
+function toValues(map: Map<string, number>) : Set<number> {
+    return new Set<number>(map.values());
 }
 
 export function part1(lines: string[]): any {
     const counts: Map<string, number>[] = lines.map(parseLine);
-    const frequencies: Set<number>[] = counts.map(getFrequencies);
+    const frequencies: Set<number>[] = counts.map(toValues);
     let twos: number = 0;
     let threes: number = 0;
     for (const set of frequencies) {
