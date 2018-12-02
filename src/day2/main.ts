@@ -13,14 +13,9 @@ function toValues(map: Map<string, number>) : Set<number> {
 }
 
 export function part1(lines: string[]): any {
-    const counts: Map<string, number>[] = lines.map(parseLine);
-    const frequencies: Set<number>[] = counts.map(toValues);
-    let twos: number = 0;
-    let threes: number = 0;
-    for (const set of frequencies) {
-        if (set.has(2)) { twos++; }
-        if (set.has(3)) { threes++; }
-    }
+    const counts: Set<number>[] = lines.map(parseLine).map(toValues);
+    const twos: number = counts.filter((value) => value.has(2)).length;
+    const threes:number  = counts.filter((value) => value.has(3)).length;
     return twos * threes;
 }
 
