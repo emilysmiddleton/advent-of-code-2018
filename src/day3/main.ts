@@ -29,22 +29,27 @@ function getCoordinates(rectangle: Rectangle): string[] {
     return coordinates;
 }
 
-export function part1(lines: string[]): any {
-    const rectangles: Rectangle[] = lines.map(parseLine);
-
-    const all: Set<string> = new Set<string>();
-    const overlap: Set<string> = new Set<string>();
-
+function toCounts(rectangles: Rectangle[]): Map<string, number> {
+    const map = new Map<string, number>();
     for (const rectangle of rectangles) {
-        const coordinates = getCoordinates(rectangle);
-        for (const coordinate of coordinates) {
-            if (all.has(coordinate)) {
-                overlap.add(coordinate);
-            }
-            all.add(coordinate);
+        for (const coordinate of getCoordinates(rectangle)) {
+            let count = map.get(coordinate);
+            count = count ? count + 1 : 1;
+            map.set(coordinate, count);
         }
     }
-    return overlap.size;
+    return map;
+}
+
+export function part1(lines: string[]): any {
+    const rectangles: Rectangle[] = lines.map(parseLine);
+    const counts: Map<string, number> = toCounts(rectangles);
+    console.log(counts);
+    let overlaps: number = 0;
+    for (const count of counts.values()) {
+        if (count > 1) { overlaps++; }
+    }
+    return overlaps;
 }
 
 export function part2(_input: string[]): any {
