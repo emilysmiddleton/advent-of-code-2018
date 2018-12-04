@@ -67,15 +67,25 @@ function getTotal(minutes: number[]): number {
     return minutes.reduce((a: number, b: number) => a + b, 0);
 }
 
-export function part1(lines: string[]): any {
+function parse(lines: string[]): Guard[] {
     const parsed: LogLine[] = lines.map(parseLine);
     parsed.sort((a, b) => a.date.getTime() - b.date.getTime());
-    const guards: Guard[] = getGuards(parsed);
+    return getGuards(parsed);
+}
+
+export function part1(lines: string[]): any {
+    const guards: Guard[] = parse(lines);
     const guard: Guard = sleepiestGuard(guards);
     const minute: number = guard.minutes.lastIndexOf(Math.max(...guard.minutes));
     return minute * guard.id;
 }
 
-export function part2(_input: string[]): any {
-    return 0;
+export function part2(lines: string[]): any {
+    const guards: Guard[] = parse(lines);
+    const guard = guards.reduce((a: Guard, b: Guard) => {
+       const maxA: number =  Math.max(...a.minutes);
+       const maxB: number =  Math.max(...b.minutes);
+       return maxA > maxB ? a : b;
+    });
+    return guard.minutes.lastIndexOf(Math.max(...guard.minutes)) * guard.id;
 }
