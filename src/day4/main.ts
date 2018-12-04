@@ -8,13 +8,7 @@ type LogLine = {
 
 type Guard = {
     id: number,
-    sleeps: SleepTime[]
-}
-
-type SleepTime = {
-    from: Date,
-    to: Date,
-    duration: number
+    minutes: number[]
 }
 
 function parseLine(line: string): LogLine {
@@ -41,8 +35,9 @@ function getGuards(logs: LogLine[]): Guard[] {
             else {
                 guard = {
                     id: parseInt(guardLine[1]),
-                    sleeps: []
+                    minutes: []
                 };
+                for (let i = 0; i < 60; i++) { guard.minutes[i] = 0; }
                 map.set(guard.id, guard);
             }
         }
@@ -50,12 +45,9 @@ function getGuards(logs: LogLine[]): Guard[] {
             from = line.date;
         }
         if (line.description === 'wakes up') {
-            const sleep: SleepTime = {
-                from: from,
-                to: line.date,
-                duration: line.date.getTime() - from.getTime()
-            };
-            guard.sleeps.push(sleep);
+            for (let i = from.getMinutes(); i < line.date.getMinutes(); i++) {
+                guard.minutes[i] = guard.minutes[i] + 1;
+            }
         }
     }
     const guards: Guard[] = [];
@@ -65,25 +57,14 @@ function getGuards(logs: LogLine[]): Guard[] {
 
 function sleepiestGuard(guards: Guard[]): Guard {
     return guards.reduce((a: Guard, b: Guard) => {
-        const totalA = getTotal(a.sleeps);
-        const totalB = getTotal(b.sleeps);
+        const totalA = getTotal(a.minutes);
+        const totalB = getTotal(b.minutes);
         return totalA > totalB ? a : b;
     })
 }
 
-function getTotal(sleeps: SleepTime[]): number {
-    return sleeps.reduce((a: number, b: SleepTime) => a + b.duration, 0);
-}
-
-function sleepiestMinute(sleeps: SleepTime[]): number {
-    const minutes: number[] = [];
-    for (let i = 0; i < 60; i++) { minutes[i] = 0; }
-    for (const sleep of sleeps) {
-        for (let min = sleep.from.getMinutes(); min < sleep.to.getMinutes(); min++) {
-            minutes[min] = minutes[min] + 1;
-        }
-    }
-    return minutes.lastIndexOf(Math.max(...minutes));
+function getTotal(minutes: number[]): number {
+    return minutes.reduce((a: number, b: number) => a + b, 0);
 }
 
 export function part1(lines: string[]): any {
@@ -91,7 +72,7 @@ export function part1(lines: string[]): any {
     parsed.sort((a, b) => a.date.getTime() - b.date.getTime());
     const guards: Guard[] = getGuards(parsed);
     const guard: Guard = sleepiestGuard(guards);
-    const minute: number =  sleepiestMinute(guard.sleeps);
+    const minute: number = guard.minutes.lastIndexOf(Math.max(...guard.minutes));
     return minute * guard.id;
 }
 
