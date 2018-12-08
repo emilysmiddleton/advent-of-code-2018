@@ -1,9 +1,9 @@
-import {part1, part2} from './day4/main'
+import {part1, part2} from './day8/main'
 
 run();
 
 async function run() {
-    const readStream: ReadableStream = require('fs').createReadStream('src/day4/input.txt');
+    const readStream: ReadableStream = require('fs').createReadStream('src/day8/input.txt');
     const lines: string[] = await parseLines(readStream);
     console.log("Part 1");
     console.log(part1(lines));
