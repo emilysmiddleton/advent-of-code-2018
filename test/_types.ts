@@ -1,4 +1,5 @@
 type Expectation = {
+    separator?: string,
     input: string,
     expected: any
 }

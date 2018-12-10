@@ -8,7 +8,8 @@ for (const dayTest of fixtures) {
             testNumber++;
             const name: string = `day ${dayTest.day}, part ${partTest.part}, test ${testNumber}`;
             test(name,  async t => {
-                const input: string[] = fixture.input.split(', ');
+                const separator: string = fixture.separator ? fixture.separator : ', ';
+                const input: string[] = fixture.input.split(separator);
                 const actual: any = await partTest.method(input);
                 t.is(actual, fixture.expected);
             });
