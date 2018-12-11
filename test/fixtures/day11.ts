@@ -8,7 +8,7 @@ export const day11: DayTest = {
             part: 1,
             method: part1,
             fixtures: [
-
+                { input: '18', expected: '33,45,3' }
             ]
         },
         {
