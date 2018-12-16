@@ -8,6 +8,10 @@ export const day5: DayTest = {
             part: 1,
             method: part1,
             fixtures: [
+                {
+                    input: 'dabAcCaCBAcCcaDA',
+                    expected: 10
+                }
 
             ]
         },
@@ -15,7 +19,10 @@ export const day5: DayTest = {
             part: 2,
             method: part2,
             fixtures: [
-
+                {
+                    input: 'dabAcCaCBAcCcaDA',
+                    expected: 4
+                }
             ]
         }
     ]
