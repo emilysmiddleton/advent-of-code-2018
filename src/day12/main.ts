@@ -16,6 +16,10 @@ function sum(lines: string[], repeat: number) {
         console.log(next);
     }
 
+    return sum(next);
+}
+
+function sum(state: string) {
     return Array.from(next)
         .map((value, index) => value === '#' ? -10 + index : 0)
         .reduce((a, b) => a + b, 0);
