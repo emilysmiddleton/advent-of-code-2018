@@ -1,27 +1,25 @@
 export function part1(lines: string[]): any {
-    return sum(lines, 20);
+    return repeat(lines, 20);
 }
 
-function sum(lines: string[], repeat: number) {
+function repeat(lines: string[], repeat: number) {
     const input = lines[0]
         .replace('initial state: ', '')
     const notes = lines.slice(2)
         .filter(line => line.indexOf(' => #') >= 0)
         .map(line => line.substring(0, 5));
-    console.log(input);
 
-    let next = '..........' + input + '..........';
+    let next = '.'.repeat(repeat) + input + '.'.repeat(repeat);
     for (let i = 0; i < repeat; i ++) {
         next = getNext(next, notes);
-        console.log(next);
     }
 
-    return sum(next);
+    return sum(next, repeat);
 }
 
-function sum(state: string) {
-    return Array.from(next)
-        .map((value, index) => value === '#' ? -10 + index : 0)
+function sum(state: string, repeat: number) {
+    return Array.from(state)
+        .map((value, index) => value === '#' ? index - repeat : 0)
         .reduce((a, b) => a + b, 0);
 }
 
@@ -38,6 +36,10 @@ function getNext(previous: string, notes: string[]) {
     return next;
 }
 
-export function part2(_input: string[]): any {
-    return 0;
+export function part2(lines: string[]): any {
+    const after999 = repeat(lines, 999);
+    const after1000 = repeat(lines, 1000);
+    const gradient = after1000 - after999;
+    const offset = after1000 - (gradient * 1000);
+    return 50000000000 * gradient + offset;
 }
