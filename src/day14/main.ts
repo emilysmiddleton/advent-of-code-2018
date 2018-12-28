@@ -7,6 +7,8 @@ type State = {
     scores: string[];
 }
 
+const CHUNK_LENGTH = 100;
+
 /**
  * This looks needlessly complicated. I'm breaking the string up into chunks of 10,
  * because a single string will end up with 10s of millions of characters, at which
@@ -17,21 +19,21 @@ function nextState(state: State): void {
     const score2 = parseInt(state.scores[state.elf2x].charAt(state.elf2y));
     const next = (score1 + score2).toString();
     const last = state.scores[state.scores.length - 1];
-    if (last.length === 10) {
+    if (last.length === CHUNK_LENGTH) {
         state.scores.push(next);
-    } else if (last.length === 9 && next.length === 2) {
+    } else if (last.length === CHUNK_LENGTH - 1 && next.length === 2) {
         state.scores[state.scores.length - 1] = last + next.substring(0, 1);
         state.scores.push(next.substring(1));
     } else {
         state.scores[state.scores.length - 1] = last + next;
     }
     const length = getLength(state);
-    const elf1 = (state.elf1x * 10 + state.elf1y + 1 + score1) % length;
-    const elf2 = (state.elf2x * 10 + state.elf2y + 1 + score2) % length;
-    state.elf1x = Math.floor(elf1 / 10);
-    state.elf1y = elf1 % 10;
-    state.elf2x = Math.floor(elf2 / 10);
-    state.elf2y = elf2 % 10;
+    const elf1 = (state.elf1x * CHUNK_LENGTH + state.elf1y + 1 + score1) % length;
+    const elf2 = (state.elf2x * CHUNK_LENGTH + state.elf2y + 1 + score2) % length;
+    state.elf1x = Math.floor(elf1 / CHUNK_LENGTH);
+    state.elf1y = elf1 % CHUNK_LENGTH;
+    state.elf2x = Math.floor(elf2 / CHUNK_LENGTH);
+    state.elf2y = elf2 % CHUNK_LENGTH;
 
 }
 
