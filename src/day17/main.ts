@@ -34,11 +34,11 @@ function createGrid(lines: string[]): Ground {
     return grid;
 }
 
-function next(ground: Ground, last: Coord): Coord {
+function next(ground: Ground, last: Coord): Coord[] {
     const below = down(last);
     if (isSand(ground, below)) {
         ground.set(below, '|');
-        return below;
+        return [below];
     }
     const leftWall = getWall(ground, last, left);
     const rightWall = getWall(ground, last, right);
@@ -47,21 +47,20 @@ function next(ground: Ground, last: Coord): Coord {
         for (let i = leftWall[0] + 1; i < rightWall[0]; i++) {
             ground.set([i, last[1]], '~');
         }
-        return up(last);
+        return [up(last)];
     }
 
 
     if (leftWall) {
         for (let i = leftWall[0] + 1; i <= last[0]; i++) {
             ground.set([i, last[1]], '|');
-            console.log(i);
         }
         let next = last;
         while (isClay(ground, down(next)) || isWater(ground, down(next))) {
             next = right(next);
             ground.set(next, '|');
         }
-        return next;
+        return [next];
     }
 
     if (rightWall) {
@@ -74,7 +73,7 @@ function next(ground: Ground, last: Coord): Coord {
             ground.set(next, '|');
         }
         ground.set(next, '|');
-        return next;
+        return [next];
     }
     return;
 }
@@ -98,11 +97,13 @@ function getWall(ground: Ground, last: Coord, func: (coord: Coord) => Coord): Co
 export function part1(lines: string[]): any {
     const ground = createGrid(lines);
     console.log(ground.formatSlice([494, 0], [507, 13], s => s));
-    let water = [500, 0];
+    let coords = [[500, 0]];
     for (let i = 0; i < 30; i++) {
-        if (water) {
-            water = next(ground, water);
+        const next = [];
+        for (const c of coords) {
+            next.push(... next(ground, c));
         }
+        coords = next;
     }
     console.log(ground.formatSlice([494, 0], [507, 13], s => s));
     console.log(water);
