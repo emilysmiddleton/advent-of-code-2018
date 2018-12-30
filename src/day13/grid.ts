@@ -89,4 +89,11 @@ export class Grid<T> {
         }).join('\n');
     }
 
+    public formatSlice(from: Coord, to: Coord, format: (t:T) => string) {
+        return this.squares
+            .slice(from[1], to[1] + 1)
+            .map(value => value.slice(from[0], to[0] + 1).map(format).join(''))
+            .join('\n');
+    }
+
 }
