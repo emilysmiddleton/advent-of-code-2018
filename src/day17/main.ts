@@ -1,4 +1,4 @@
-import { Coord, down, Grid, left, right, up } from '../day13/grid';
+import { Coord, down, Grid, left, right } from '../day13/grid';
 
 type Ground = Grid<string>;
 const REGEX = new RegExp('([xy])=(\\d+), [xy]=(\\d+)\\.\\.(\\d+)');
@@ -20,7 +20,7 @@ function parse(line: string): Coord[] {
 function createGrid(lines: string[]): Ground {
     const coords: Coord[] = [];
     lines.forEach(line => coords.push(... parse(line)));
-    const width = Math.max(...coords.map(c => c[0])) + 1;
+    const width = Math.max(...coords.map(c => c[0])) + 10;
     const height = Math.max(...coords.map(c => c[1])) + 1;
     const squares: string[][] = [];
     for (let y = 0; y < height; y++) {
@@ -34,82 +34,78 @@ function createGrid(lines: string[]): Ground {
     return grid;
 }
 
-function next(ground: Ground, last: Coord): Coord[] {
-    const below = down(last);
-    if (isSand(ground, below)) {
-        ground.set(below, '|');
-        return [below];
+export function fillFromPump(ground: Ground): void {
+    const pump = ground.getAllMatching(s => s === '+')[0];
+    ground.set(down(pump), '|');
+    let changed = true;
+    while (changed) {
+        changed = fill(ground);
     }
-    const leftWall = getWall(ground, last, left);
-    const rightWall = getWall(ground, last, right);
-
-    if (leftWall && rightWall) {
-        for (let i = leftWall[0] + 1; i < rightWall[0]; i++) {
-            ground.set([i, last[1]], '~');
-        }
-        return [up(last)];
-    }
-
-
-    if (leftWall) {
-        for (let i = leftWall[0] + 1; i <= last[0]; i++) {
-            ground.set([i, last[1]], '|');
-        }
-        let next = last;
-        while (isClay(ground, down(next)) || isWater(ground, down(next))) {
-            next = right(next);
-            ground.set(next, '|');
-        }
-        return [next];
-    }
-
-    if (rightWall) {
-        for (let i = last[0]; i < rightWall[0]; i++) {
-            ground.set([i, last[1]], '|');
-        }
-        let next = last;
-        while (isClay(ground, down(next)) || isWater(ground, down(next))) {
-            next = left(next);
-            ground.set(next, '|');
-        }
-        ground.set(next, '|');
-        return [next];
-    }
-    return;
 }
 
-const isClay = (ground: Ground, coord: Coord) => ground.get(coord) === '#';
-const isWater = (ground: Ground, coord: Coord) => ground.get(coord) === '~';
+function fill(ground: Ground): boolean {
+    let changed = false;
+    for (const coord of ground.getAllMatching(s => s === '|')) {
+        changed = changed || fillFromBottom(ground, down(coord));
+        if (isSolid(ground, down(coord))) {
+            changed = changed || fillFromBottom(ground, left(coord));
+            changed = changed || fillFromBottom(ground, right(coord));
+        }
+    }
+    return changed;
+}
+
+function fillFromBottom(ground: Ground, coord: Coord): boolean{
+    if (isSand(ground, coord)) {
+        let next = coord;
+        while(isSand(ground, next)) {
+            next = down(next);
+        }
+        for (let y = next[1] - 1; y >= coord[1]; y--) {
+            setWater(ground, [coord[0], y]);
+        }
+        return true;
+    }
+    return false;
+}
+
+function setWater(ground: Ground, coord: Coord): void {
+    const leftWall = getWall(ground, coord, left);
+    const rightWall = getWall(ground, coord, right);
+    if (leftWall && rightWall) {
+        for (let x = leftWall[0] + 1; x < rightWall[0]; x++) {
+            ground.set([x, coord[1]], '~');
+        }
+    } else {
+        ground.set(coord, '|');
+    }
+}
+
+const isSolid = (ground: Ground, coord: Coord) => ground.get(coord) === '#' || ground.get(coord) === '~';
 const isSand = (ground: Ground, coord: Coord) => ground.get(coord) === '.';
 
 function getWall(ground: Ground, last: Coord, func: (coord: Coord) => Coord): Coord {
     let next = last;
-    while (ground.get(next) !== '#') {
+    while (ground.get(next) !== '#' && ground.withinGrid(next)) {
         if (ground.get(down(next)) === '.') {
             return;
         }
         next = func(next);
     }
-    return next;
+    return ground.withinGrid(next) ? next : undefined;
 }
-
 
 export function part1(lines: string[]): any {
     const ground = createGrid(lines);
-    console.log(ground.formatSlice([494, 0], [507, 13], s => s));
-    let coords = [[500, 0]];
-    for (let i = 0; i < 30; i++) {
-        const next = [];
-        for (const c of coords) {
-            next.push(... next(ground, c));
-        }
-        coords = next;
-    }
-    console.log(ground.formatSlice([494, 0], [507, 13], s => s));
-    console.log(water);
-    return 0;
+    const lower = Math.min(... ground.getAllMatching(s => s === '#').map(c => c[1]));
+    fillFromPump(ground);
+    console.log(ground.toString(s => s));
+    return ground.getAllMatching(s => s === '~' || s === '|').filter(c=> c[1] >= lower).length;
 }
 
-export function part2(_input: string[]): any {
-    return 0;
+export function part2(lines: string[]): any {
+    const ground = createGrid(lines);
+    fillFromPump(ground);
+    console.log(ground.toString(s => s));
+    return ground.getAllMatching(s => s === '~').length;
 }

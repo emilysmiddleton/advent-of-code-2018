@@ -23,6 +23,10 @@ export function down(coord: Coord) {
     return [coord[0], coord[1] + 1];
 }
 
+export function equals(c1: Coord, c2: Coord) {
+    return c1 && c2 && c1[0] === c2[0] && c1[1] === c2[1];
+}
+
 export function getAdjacent(coord: Coord): Coord[] {
     return [
         up(coord),
@@ -49,7 +53,8 @@ export class Grid<T> {
     }
 
     public get2(x: number, y: number): T {
-        return this.squares[y][x];
+        const row = this.squares[y];
+        return row ? row[x] : undefined;
     }
 
     private width(): number {
